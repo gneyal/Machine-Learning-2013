@@ -63,12 +63,38 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 
+% p = predict(Theta1, Theta2, X);
 
+h1 = sigmoid([ones(m, 1) X] * Theta1');
+h2 = sigmoid([ones(m, 1) h1] * Theta2');
 
+cost = 0;
+% the first loop - going over all of the example set and summing.
+for i = 1:m
+	% converting y(1) to a binary vector representing the answer
+	% yvec should be something similar to: [0 0 0 1 0] representing the number 4 out of 5 options
+	yvec = index_vec(num_labels, y(i), 1);
+  prediction_vec = h2(i,:);
+  for k = 1:num_labels
+  	cost += yvec(k) * log(prediction_vec(k)) + (1 - yvec(k)) * (log(1 - prediction_vec(k)));
+  endfor
+endfor
 
+% Before regularization
+J = (-1/m) * cost;
 
+% initilizing regularization variable
+regularization = 0;
 
+% summing all Theta1 elements except the first column (the bias unit)
+r_theta1 = sum(Theta1(:, 2:end)(:).^2);
 
+% summing all Theta2 elements except the first column (the bias unit)
+r_theta2 = sum(Theta2(:, 2:end)(:).^2);
+
+regularization = r_theta1 + r_theta2;
+
+J = J + (lambda/(2*m)) * regularization
 
 
 
