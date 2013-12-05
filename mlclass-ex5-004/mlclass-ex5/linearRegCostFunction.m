@@ -20,11 +20,27 @@ grad = zeros(size(theta));
 %
 
 
+% size(theta) == (2,1)
+% size(X) == (12,2)
+
+% size(X*theta) = (12,1)
+% size(y) = (12, 1)
+
+% size(X*theta - y)  = (12, 1)
+
+% size((X*theta - y).^2) = (12, 1)
+% (X * theta - y)
+% (X * theta - y).^2
+Jn = (1/(2*m)) * (sum( (X * theta - y).^2)) ;
+t = theta'(2:end);
+R = (lambda/(2*m)) * sum(t * t');
+J = Jn + R;
 
 
-
-
-
+grad(1, 1) = (1/m) * ones(1, m) * ((X*theta - y).* X(:, 1) );
+for i = 2:size(theta)(1)
+	grad(i, 1) = (1/m) * ones(1, m) * ((X*theta - y).* X(:, i) ) + (lambda/m) * theta(i, 1);
+endfor
 
 
 
