@@ -96,15 +96,54 @@ regularization = r_theta1 + r_theta2;
 
 J = J + (lambda/(2*m)) * regularization
 
+% 
+capital_delta_2 = zeros(size(Theta2)(1), size(Theta2)(2));
+capital_delta_1 = zeros(size(Theta1)(1), size(Theta1)(2));
+
+% Starting to calculate div
+
+for t = 1:m 
+
+	a1 = [1 X(t,:)];
+	% Calculating the second layer activation values.
+	% The result is a2 which is a 1*25 vector. 
+	% Each column (i) represent the the value for the i-th activation unit in the second layer.
+
+	z2 = [1 X(t,:)] * Theta1';
+	a2 = sigmoid(z2);
+
+	% Calculating the third layer activation values.
+	% The result is a3 which is a 1*26 vector;
+	% Each column represent the value for the i-th activation unit in the third layer.
+
+	z3 = [1 a2] * Theta2';
+	a3 = sigmoid(z3);
+
+	% How far is our prediction on the t-th example in X, from the actual class of it, 
+	% given by the y vector.
+	y_vec = index_vec(num_labels, y(t), 1);
+	delta_3 = a3' - y_vec';
+
+	% Hidden layer delta
+	delta_2 = (Theta2' * delta_3) .* sigmoidGradient([1; z2']);
 
 
+	% Calculating capital deltas (the sum of errors for every parameter in Theta1/Theta2)
 
+	
+	capital_delta_1 = capital_delta_1 + delta_2(2:end) * a1;
+	
+	a2 = [1 a2];
+	capital_delta_2 = capital_delta_2 + delta_3 * a2;
 
+endfor
 
+Theta1_copy = [zeros(size(Theta1)(1), 1), Theta1(:, 2:end)];
+Theta2_copy = [zeros(size(Theta2)(1), 1), Theta2(:, 2:end)];
 
+Theta1_grad = (1/m) * capital_delta_1 + lambda/m * Theta1_copy;
 
-
-
+Theta2_grad = (1/m) * capital_delta_2 + lambda/m * Theta2_copy;
 
 % -------------------------------------------------------------
 
