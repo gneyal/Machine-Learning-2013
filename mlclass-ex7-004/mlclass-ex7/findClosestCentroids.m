@@ -21,9 +21,17 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
-
-
-
+for i = 1:size(X,1)
+	min_dis = sum((X(i,:) - centroids(1, :)).^2);
+	idx(i) = 1;
+	for j = 1:size(centroids, 1)
+		current_dis = sum((X(i,:) - centroids(j, :)).^2);
+		if current_dis < min_dis
+			min_dis = current_dis;
+			idx(i) = j;
+		endif
+	endfor
+endfor
 
 
 
