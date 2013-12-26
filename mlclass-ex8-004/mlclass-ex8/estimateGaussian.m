@@ -23,10 +23,11 @@ sigma2 = zeros(n, 1);
 
 
 
+mu = (X' * ones(m,1))/m;
 
-
-
-
+x_minus_u = (X - repmat(mu', m, 1));
+x_minus_u_2 = x_minus_u.^2;
+sigma2 = (x_minus_u_2' * ones(m,1))/m;
 
 
 
